@@ -1,6 +1,8 @@
 import { Menu, Transition } from "@headlessui/react";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
+import { MdMoreVert } from "react-icons/md";
 
 interface IVideoCard {
   id: string;
@@ -18,11 +20,19 @@ export default function VideoCard({
   logo,
 }: IVideoCard) {
   return (
-    <div className="rounded-xl">
+    <div className="rounded-xl max-w-[414px] border border-white flex flex-col self-start bg-sidebar">
       <Link href={`/watch/${id}`} className="block">
-        <img src={thumbnail} alt={title} className="rounded-xl" />
+        <div>
+          <Image
+            src={thumbnail}
+            alt={title}
+            width={414}
+            height={233}
+            className="rounded-xl"
+          />
+        </div>
       </Link>
-      <div className="flex items-start pt-2.5 pr-1 group">
+      <div className="flex items-start py-2.5 pr-1 group">
         <div className="w-10">
           <img
             src={logo}
@@ -34,25 +44,20 @@ export default function VideoCard({
         </div>
         <div className="flex flex-col px-2.5">
           {/* Video Title */}
-          <span className="text-sm leading-tight font-medium" title={title}>
+          <span
+            className="text-sm leading-tight font-medium text-title"
+            title={title}
+          >
             {title}
           </span>
           {/* Video Creator */}
-          <span className="text-xs">{creator}</span>
-          {/* Video Views */}
-          <span className="text-xs ">views</span>
+          <span className="text-xs text-category">{creator}</span>
         </div>
-        {/* <div className="ml-auto md:opacity-0 md:group-hover:opacity-100 opacity-100">
-            <button className="p-1.5">
-              <OptionIcon />
-            </button>
-          </div> */}
-        <Menu
-          as="div"
-          className="relative inline-block text-left ml-auto md:opacity-0 md:group-hover:opacity-100 opacity-100"
-        >
-          <div>
-            <Menu.Button>{/* <OptionIcon /> */}+</Menu.Button>
+        <Menu as="div" className="relative inline-block text-left ml-auto ">
+          <div className="md:opacity-0 md:group-hover:opacity-100 opacity-100">
+            <Menu.Button className="text-2xl text-white">
+              <MdMoreVert />
+            </Menu.Button>
           </div>
           <Transition
             as={Fragment}
@@ -63,42 +68,16 @@ export default function VideoCard({
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none py-1">
+            <Menu.Items className="absolute right-0 mt-2 w-44 origin-top-right divide-y divide-gray-100 rounded-md bg-sidebar shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none py-1">
               <div className="px-1 ">
                 <Menu.Item>
                   {({ active }) => (
                     <button
                       className={`${
-                        active ? "bg-violet-500 text-white" : "text-gray-900"
+                        active ? "bg-gray-500/20 text-white" : "text-white"
                       } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                     >
                       Add to Watchlater
-                    </button>
-                  )}
-                </Menu.Item>
-              </div>
-              <div className="px-1  ">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "bg-violet-500 text-white" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      Save to Playlist
-                    </button>
-                  )}
-                </Menu.Item>
-              </div>
-              <div className="px-1 ">
-                <Menu.Item>
-                  {({ active }) => (
-                    <button
-                      className={`${
-                        active ? "bg-violet-500 text-white" : "text-gray-900"
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      Share
                     </button>
                   )}
                 </Menu.Item>

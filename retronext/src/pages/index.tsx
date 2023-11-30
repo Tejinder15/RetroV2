@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <Layout>
       <section>
-        <div className="grid grid-cols-videoContainer gap-5 py-5 lg:px-5 px-2 w-full">
+        <div className="grid grid-cols-3 gap-5 py-5 lg:px-5 px-2 w-full">
           <VideoCard
             id={"Tqsz6fjvhZM"}
             title={"Hostel - Stand Up Comedy ft. Anubhav Singh Bassi"}

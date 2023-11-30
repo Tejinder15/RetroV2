@@ -11,8 +11,8 @@ export default function Login() {
 
   return (
     <main className="min-h-screen flex items-center justify-center">
-      <div className="border border-black py-4 px-3">
-        <h2 className="text-center mb-3 text-xl">Login</h2>
+      <div className="py-4 px-3 bg-sidebar max-w-xs rounded-sm shadow-md">
+        <h2 className="text-center mb-3 text-xl text-title">Login</h2>
         <form>
           <div className="flex flex-col gap-2">
             <label htmlFor="email">Email address</label>
