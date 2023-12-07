@@ -20,18 +20,23 @@ export default function VideoCard({
   logo,
 }: IVideoCard) {
   return (
-    <div className="rounded-xl max-w-[414px] border border-white flex flex-col self-start bg-sidebar">
-      <Link href={`/watch/${id}`} className="block">
-        <div>
-          <Image
-            src={thumbnail}
-            alt={title}
-            width={414}
-            height={233}
-            className="rounded-xl"
-          />
+    <div className="rounded-xl w-full min-w-[300px] max-w-[414px] border border-white flex flex-col bg-sidebar h-full relative">
+      <div>
+        <div className="relative w-full block h-[230px]">
+          <Link
+            href={`/watch/${id}`}
+            className="overflow-hidden block absolute top-0 bottom-0 left-0 right-0 mx-auto h-full"
+          >
+            <Image
+              src={thumbnail}
+              alt={title}
+              width={410}
+              height={267}
+              className="rounded-xl object-cover w-full h-full inline-block min-h-[1px] min-w-[1px] visible"
+            />
+          </Link>
         </div>
-      </Link>
+      </div>
       <div className="flex items-start py-2.5 pr-1 group">
         <div className="w-10">
           <img

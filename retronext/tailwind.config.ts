@@ -18,6 +18,10 @@ const config: Config = {
       gridTemplateColumns: {
         videoContainer: "repeat(auto-fit, minmax(260px, 1fr))",
       },
+      fontFamily: {
+        sans: ["var(--font-poppin)"],
+        mono: ["var(--font-carter)"],
+      },
     },
   },
   plugins: [],

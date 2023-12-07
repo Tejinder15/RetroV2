@@ -1,26 +1,29 @@
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import Layout from "@/components/layout";
 import VideoCard from "@/components/videocard";
-
-const inter = Inter({ subsets: ["latin"] });
+import { useGetAllVideosQuery } from "@/services/retro";
+import { useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { setUser } from "@/features/authSlice";
 
 export default function Home() {
+  const { data, error, isLoading } = useGetAllVideosQuery("");
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    dispatch(setUser(user));
+  }, []);
+
+  if (isLoading) return <p>...Loading</p>;
+  if (error) return <p>Something went wrong</p>;
+  console.log(data);
   return (
     <Layout>
       <section>
-        <div className="grid grid-cols-3 gap-5 py-5 lg:px-5 px-2 w-full">
-          <VideoCard
-            id={"Tqsz6fjvhZM"}
-            title={"Hostel - Stand Up Comedy ft. Anubhav Singh Bassi"}
-            thumbnail={
-              "https://img.youtube.com/vi/Tqsz6fjvhZM/maxresdefault.jpg"
-            }
-            creator={"Anubhav Bassi"}
-            logo={
-              "https://yt3.ggpht.com/ytc/AKedOLS7IEPwzVpf3MOKIBHsLlIIG_UTH7CKO2iKYNxw4A=s88-c-k-c0x00ffffff-no-rj"
-            }
-          />
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-5 py-5 lg:px-5 px-2 w-full justify-items-center">
+          {data.map((item: any, idx: number) => (
+            <VideoCard {...item} key={idx} />
+          ))}
         </div>
       </section>
     </Layout>
