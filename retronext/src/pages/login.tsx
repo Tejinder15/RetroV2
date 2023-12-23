@@ -1,11 +1,11 @@
 import { useLoginUserMutation } from "@/services/retro";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/features/authSlice";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
 
 function getCharacterValidationError(str: string) {
   return `Your password must have at least 1 ${str} character`;
@@ -14,25 +14,26 @@ function getCharacterValidationError(str: string) {
 const LoginSchema = Yup.object().shape({
   email: Yup.string().email("Invalid Email").required("Enter Email"),
   password: Yup.string()
-    .min(
-      8,
-      "password must contain 8 or more characters with at least one of each: uppercase, lowercase, number and special"
-    )
-    .matches(/[0-9]/, getCharacterValidationError("digit"))
-    .matches(/[a-z]/, getCharacterValidationError("lowercase"))
-    .matches(/[A-Z]/, getCharacterValidationError("uppercase"))
+    // .min(
+    //   8,
+    //   "password must contain 8 or more characters with at least one of each: uppercase, lowercase, number and special"
+    // )
+    // .matches(/[0-9]/, getCharacterValidationError("digit"))
+    // .matches(/[a-z]/, getCharacterValidationError("lowercase"))
+    // .matches(/[A-Z]/, getCharacterValidationError("uppercase"))
     .required("Enter Password"),
 });
 
 export default function Login() {
   const dispatch = useDispatch();
+  const router = useRouter();
   const [loginUser, { data, isError, error, isLoading, isSuccess }] =
     useLoginUserMutation();
 
   useEffect(() => {
     if (isSuccess) {
       dispatch(setUser({ token: data.token, username: data.username }));
-      redirect("/");
+      router.replace("/");
     }
   }, [isSuccess]);
 
@@ -44,6 +45,7 @@ export default function Login() {
           initialValues={{ email: "", password: "" }}
           validationSchema={LoginSchema}
           onSubmit={async (values) => {
+            // console.log(values);
             await loginUser(values);
           }}
         >

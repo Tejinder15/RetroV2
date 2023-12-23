@@ -4,9 +4,10 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const retroApi = createApi({
   reducerPath: "retorApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:4000/api" }),
+  tagTypes: ["watchLater"],
   endpoints: (builder) => ({
     getAllVideos: builder.query({
-      query: () => `/videos/`,
+      query: (category) => `/videos?category=${category}`,
     }),
     getVideoById: builder.query({
       query: (id) => `/videos/${id}`,
@@ -47,6 +48,43 @@ export const retroApi = createApi({
           },
         };
       },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(
+                (id: string) => ({ type: "watchLater", id } as const)
+              ),
+              { type: "watchLater", id: "LIST" },
+            ]
+          : [{ type: "watchLater", id: "LIST" }],
+    }),
+    addToWatchLater: builder.mutation({
+      query: (payload) => {
+        return {
+          url: "/user/watchlater",
+          method: "POST",
+          body: payload.vid,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${payload.token}`,
+          },
+        };
+      },
+      invalidatesTags: [{ type: "watchLater", id: "LIST" }],
+    }),
+    removeFromWatchLater: builder.mutation({
+      query: (payload) => {
+        return {
+          url: "/user/watchlater",
+          method: "DELETE",
+          body: payload.vid,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${payload.token}`,
+          },
+        };
+      },
+      invalidatesTags: (result, error, id) => [{ type: "watchLater", id }],
     }),
     getLikedVideos: builder.query({
       query: (token) => {
@@ -55,6 +93,19 @@ export const retroApi = createApi({
           url: "/user/likes",
           headers: {
             Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    setVideoComment: builder.mutation({
+      query: (payload) => {
+        return {
+          url: `/user/comment/${payload.id}`,
+          method: "POST",
+          body: payload.commentData,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${payload.token}`,
           },
         };
       },
@@ -70,5 +121,8 @@ export const {
   useLoginUserMutation,
   useSignupUserMutation,
   useGetWatchLaterQuery,
+  useAddToWatchLaterMutation,
+  useRemoveFromWatchLaterMutation,
   useGetLikedVideosQuery,
+  useSetVideoCommentMutation,
 } = retroApi;

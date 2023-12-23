@@ -3,6 +3,8 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { Provider } from "react-redux";
 import { Poppins, Carter_One } from "next/font/google";
+import AuthWrapper from "@/components/authWrapper";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,7 +24,10 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <div className={`${poppins.variable} ${carter.variable} font-sans`}>
-        <Component {...pageProps} />
+        <AuthWrapper>
+          <Component {...pageProps} />
+        </AuthWrapper>
+        <Toaster position="bottom-center" />
       </div>
     </Provider>
   );
