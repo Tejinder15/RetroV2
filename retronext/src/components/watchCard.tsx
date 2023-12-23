@@ -4,6 +4,9 @@ import { RiPlayListAddFill } from "react-icons/ri";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
 import { MdArrowDropDown } from "react-icons/md";
+import { useLikeVideoMutation } from "@/services/retro";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 interface IWatchCard {
   id: string;
@@ -11,8 +14,9 @@ interface IWatchCard {
   title: string;
   logo: string;
   creator: string;
-  likes: number;
+  likes: string[];
   description: string;
+  token?: string | null;
 }
 
 export default function WatchCard({
@@ -23,7 +27,19 @@ export default function WatchCard({
   creator,
   likes,
   description,
+  token,
 }: IWatchCard) {
+  const router = useRouter();
+  const [
+    likeVideo,
+    {
+      data: likedVideo,
+      error: likedVideoError,
+      isLoading,
+      isSuccess: likedVideoSuccess,
+    },
+  ] = useLikeVideoMutation();
+  console.log(likedVideo);
   return (
     <div>
       <div
@@ -49,11 +65,26 @@ export default function WatchCard({
           <span className="text-category text-sm ">{creator}</span>
         </div>
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 border border-gray-600 rounded-2xl px-3 py-1 bg-sidebar shadow-md">
+          <button
+            className="flex items-center gap-2 border border-gray-600 rounded-2xl px-3 py-1 bg-sidebar shadow-md"
+            onClick={async () => {
+              if (!token) {
+                router.replace("/login");
+              }
+              // TODO: store user id in localstorage so as to check if likes has the user id
+              await likeVideo({ token, vid: { id } });
+              if (likedVideoSuccess) {
+                toast.success("Liked Video");
+              }
+              if (likedVideoError) {
+                toast.error("Could not like video.");
+              }
+            }}
+          >
             <span className="text-category text-xl">
               <MdThumbUp />
             </span>
-            <span className="text-white">{likes}</span>
+            <span className="text-white">{likes.length}</span>
           </button>
           <button className="flex items-center justify-center rounded-full p-1.5 border border-gray-600">
             <span className="text-category text-xl">

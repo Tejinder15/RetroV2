@@ -4,13 +4,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const retroApi = createApi({
   reducerPath: "retorApi",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:4000/api" }),
-  tagTypes: ["watchLater"],
+  tagTypes: ["watchLater", "video", "likes"],
   endpoints: (builder) => ({
     getAllVideos: builder.query({
       query: (category) => `/videos?category=${category}`,
     }),
     getVideoById: builder.query({
       query: (id) => `/videos/${id}`,
+      providesTags: (result, error, id) => [{ type: "video", id }],
     }),
     userSignup: builder.query({
       query: () => `/user/signup`,
@@ -96,6 +97,13 @@ export const retroApi = createApi({
           },
         };
       },
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map((id: string) => ({ type: "likes", id } as const)),
+              { type: "likes", id: "like" },
+            ]
+          : [{ type: "likes", id: "like" }],
     }),
     setVideoComment: builder.mutation({
       query: (payload) => {
@@ -109,6 +117,34 @@ export const retroApi = createApi({
           },
         };
       },
+      invalidatesTags: [{ type: "video" }],
+    }),
+    likeVideo: builder.mutation({
+      query: (payload) => {
+        return {
+          url: "/user/likes",
+          method: "POST",
+          body: payload.vid,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${payload.token}`,
+          },
+        };
+      },
+      invalidatesTags: [{ type: "video" }],
+    }),
+    removeLikedVideo: builder.mutation({
+      query: (payload) => {
+        return {
+          url: `/user/likes/${payload.vid}`,
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${payload.token}`,
+          },
+        };
+      },
+      invalidatesTags: [{ type: "video" }, { type: "likes" }],
     }),
   }),
 });
@@ -125,4 +161,6 @@ export const {
   useRemoveFromWatchLaterMutation,
   useGetLikedVideosQuery,
   useSetVideoCommentMutation,
+  useLikeVideoMutation,
+  useRemoveLikedVideoMutation,
 } = retroApi;

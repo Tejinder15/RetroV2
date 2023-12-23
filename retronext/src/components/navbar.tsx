@@ -11,7 +11,7 @@ export default function Navbar() {
   const dispatch = useDispatch();
 
   return (
-    <header className="sticky top-0 left-0 z-50">
+    <header className="sticky top-0 left-0 z-30">
       <nav className="text-white flex items-center w-full justify-between max-h-20 bg-body py-5 px-6">
         <Link href={"/"}>
           <h1 className="font-mono text-white text-4xl font-bold">Retro</h1>

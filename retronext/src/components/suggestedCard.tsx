@@ -35,8 +35,6 @@ export default function SuggestedCard({
         </span>
         {/* Video Creator */}
         <span className="text-xs mt-1.5 text-category">{creator}</span>
-        {/* Video Views */}
-        <span className="text-xs mt-1">452</span>
       </div>
       <div className="w-11 text-right ml-auto pr-3">
         <Menu

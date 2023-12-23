@@ -2,7 +2,10 @@ import Layout from "@/components/layout";
 import SuggestedCard from "@/components/suggestedCard";
 import TranslucentCard from "@/components/translucentCard";
 import VideoList from "@/components/videoList";
-import { useGetLikedVideosQuery } from "@/services/retro";
+import {
+  useGetLikedVideosQuery,
+  useRemoveLikedVideoMutation,
+} from "@/services/retro";
 import { RootState } from "@/store";
 import { useSelector } from "react-redux";
 
@@ -10,6 +13,10 @@ export default function Liked() {
   const { token } = useSelector((state: RootState) => state.auth);
   const { data, isError, isSuccess, error, isLoading } =
     useGetLikedVideosQuery(token);
+  const [
+    removeLikedVideo,
+    { error: removeLikeError, isSuccess: removeLikeSuccess },
+  ] = useRemoveLikedVideoMutation();
 
   if (isLoading) return <p>...Loading</p>;
   if (isError) return <p>Something went wrong</p>;
@@ -32,8 +39,13 @@ export default function Liked() {
                 key={idx}
                 actions={[
                   {
-                    children: "remove",
-                    onClick: () => {},
+                    children: "Remove",
+                    onClick: async () => {
+                      await removeLikedVideo({
+                        vid: item._id,
+                        token,
+                      });
+                    },
                   },
                 ]}
               />

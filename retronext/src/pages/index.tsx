@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
+import PlaylistModal from "@/components/playlistModal";
 
 export default function Home() {
   const { token } = useSelector((state: RootState) => state.auth);
@@ -78,6 +79,7 @@ export default function Home() {
               ))}
             </div>
           </section>
+          <PlaylistModal />
         </>
       )}
     </Layout>

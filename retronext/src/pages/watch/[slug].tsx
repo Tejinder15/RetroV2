@@ -25,7 +25,7 @@ export default function Watch() {
   if (error) return <p>Something went wrong</p>;
   // console.log(slug);
   // console.log(data);
-  console.log(data);
+  // console.log(data);
   return (
     <Layout>
       <div className="grid grid-cols-5 px-5 py-2.5">
@@ -35,9 +35,10 @@ export default function Watch() {
             vid={data?.vid}
             title={data?.title}
             creator={data?.creator}
-            likes={data?.likes.length}
+            likes={data?.likes}
             logo={data?.logo}
             description={data?.description}
+            token={token}
           />
           {/* //TODO: COMMENT SECTION TO BE Added */}
           <div className="mt-5">
@@ -57,6 +58,7 @@ export default function Watch() {
                     className="bg-retro hover:bg-red-600 px-2 py-1.5 text-white text-sm rounded-md"
                     onClick={async (e) => {
                       e.preventDefault();
+                      if (!comment) return;
                       await setVideoComment({
                         id: data._id,
                         commentData: { comment },
@@ -78,7 +80,7 @@ export default function Watch() {
                 <ul>
                   {data.comments.map((item: any, idx: number) => (
                     <li key={idx} className="text-white">
-                      some comment
+                      {item.comment}
                     </li>
                   ))}
                 </ul>
